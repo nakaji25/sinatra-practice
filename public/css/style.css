@@ -17,7 +17,8 @@
   height: 60px;
   font-size: 24px;
 }
-.edit {
+.edit,
+.save {
   position: absolute;
   bottom: 10px;
 }
@@ -32,9 +33,20 @@
 h1 {
   font-size: 45px;
 }
-h2 {
+h2,
+.title {
   font-size: 32px;
+  margin-bottom: 5%;
 }
 .content {
   font-size: 24px;
+}
+input {
+  width: 80%;
+}
+input.content {
+  height: 30%;
+}
+label {
+  font-size: 30;
 }
