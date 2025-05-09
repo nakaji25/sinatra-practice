@@ -1,0 +1,9 @@
+<link rel="stylesheet" href="/css/style.css">
+<div class= "field between">
+  <ul>
+    <% @memos.each do |memo| %>
+      <li><%= memo["title"] %> </li>
+    <% end %>
+  </ul>
+  <button type="button" class="add btn">追加</button>
+</div>
