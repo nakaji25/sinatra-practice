@@ -1,13 +1,40 @@
-.field {
+.container {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.f-container {
   display: flex;
+}
+.i-container {
+  display: inline-block;
+  position: relative;
 }
 .between {
   justify-content: space-between;
 }
-.add {
+.btn {
   width: 100px;
   height: 60px;
+  font-size: 24px;
+}
+.edit {
+  position: absolute;
+  bottom: 10px;
+}
+.delete {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
 }
 .left {
   float: left;
+}
+h1 {
+  font-size: 45px;
+}
+h2 {
+  font-size: 32px;
+}
+.content {
+  font-size: 24px;
 }
