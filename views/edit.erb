@@ -1,0 +1,14 @@
+<form action="/memos/<%= @memo["id"] %>" method="POST">
+  <input type="hidden" name="_method" value="PATCH">
+  <div>
+    <label for="title"> タイトル：</label> <br>
+    <input type="text" id="title" name="title" value="<%= @memo["title"] %>" required class="title"/>
+  </div>
+  <div>
+    <label for="content"> 内容：</label> <br>
+    <input type="text" id="content" name="content" value="<%= @memo["content"] %>" required class="content"/>
+  </div>
+  <div>
+    <button type="submit" class="save btn">保存</button>
+  </div>
+</form>
