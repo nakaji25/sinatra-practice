@@ -7,7 +7,6 @@
 }
 .i-container {
   display: inline-block;
-  position: relative;
 }
 .between {
   justify-content: space-between;
@@ -16,16 +15,8 @@
   width: 100px;
   height: 60px;
   font-size: 24px;
-}
-.edit,
-.save {
-  position: absolute;
-  bottom: 10px;
-}
-.delete {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
+  margin-top: 30px;
+  margin-left: 30px;
 }
 .left {
   float: left;
