@@ -6,7 +6,7 @@ require 'json'
 
 FILE_PATH = 'public/memo.json'
 def open_memos(file_path)
-  JSON.parse(File.open(file_path).read)
+  JSON.parse(File.open(file_path).read, symbolize_names: true)
 end
 
 def save_memos(file_path)
@@ -26,7 +26,9 @@ get '/memos' do
 end
 
 get '/memos/:id' do
-  @memo = @memos[params[:id].to_i]
+  @memos.each do |memo|
+    @memo = memo if memo[:id] == params[:id]
+  end
   erb :content
 end
 
@@ -36,7 +38,7 @@ end
 
 get '/memos/:id/edit' do
   @memos.each do |memo|
-    @memo = memo if memo['id'] == params[:id]
+    @memo = memo if memo[:id] == params[:id]
   end
   erb :edit
 end
@@ -50,8 +52,8 @@ post '/memos' do
 end
 
 patch '/memos/:id' do
-  @memos[params[:id].to_i]['title'] = params[:title]
-  @memos[params[:id].to_i]['content'] = params[:content]
+  @memos[params[:id].to_i][:title] = params[:title]
+  @memos[params[:id].to_i][:content] = params[:content]
   save_memos(FILE_PATH)
   redirect "/memos/#{params[:id]}"
 end
