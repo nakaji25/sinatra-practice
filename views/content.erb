@@ -4,5 +4,8 @@
 <p class="content"><%= @memo["content"] %></p>
 <div class= "i-contaner between">
   <button type="button" class="edit btn">編集</button>
-  <button type="button" class="delete btn">削除</button>
+  <form action="/memos/<%= params[:id] %>" method="POST">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit" class="delete btn">削除</button>
+  </form>
 </div>

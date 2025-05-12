@@ -4,8 +4,17 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
 
+FILE_PATH = 'public/memo.json'
+def open_memos(file_path)
+  JSON.parse(File.open(file_path).read)
+end
+
+def save_memos(file_path)
+  File.open(file_path, 'w') { |file| JSON.dump(@memos, file) }
+end
+
 before do
-  @memos = JSON.parse(open('public/memo.json').read)
+  @memos = open_memos(FILE_PATH)
 end
 
 get '/' do
@@ -13,7 +22,6 @@ get '/' do
 end
 
 get '/memos' do
-  @memos = JSON.parse(open('public/memo.json').read)
   erb :memos
 end
 
@@ -29,9 +37,14 @@ end
 post '/memos' do
   @title = params[:title]
   @content = params[:content]
-  File.open('public/memo.json', 'w') do |file|
-    @memos[@memos.size] = { id: @memos.size.to_s, title: @title, content: @content }
-    JSON.dump(@memos, file)
-  end
-  redirect '/'
+  @memos[@memos.size] = { id: @memos.size.to_s, title: @title, content: @content }
+  save_memos(FILE_PATH)
+  redirect '/memos'
+end
+
+delete '/memos/:id' do
+  @memos = open_memos(FILE_PATH)
+  @memos.delete(@memos[params[:id].to_i])
+  save_memos(FILE_PATH)
+  redirect '/memos'
 end
