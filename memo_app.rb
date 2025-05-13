@@ -3,8 +3,16 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
+require 'rack'
 
 FILE_PATH = 'public/memo.json'
+
+helpers do
+  def h(text)
+    Rack::Utils.escape_html(text)
+  end
+end
+
 def open_memos(file_path)
   JSON.parse(File.open(file_path).read, symbolize_names: true)
 end
