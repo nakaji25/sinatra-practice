@@ -3,7 +3,6 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
-require 'rack'
 
 FILE_PATH = 'public/memo.json'
 
