@@ -53,7 +53,8 @@ end
 post '/memos' do
   @title = params[:title]
   @content = params[:content]
-  @memos[@memos.size] = { id: @memos.size.to_s, title: @title, content: @content }
+  latest_memo = @memos.max { |x, y| (x[:id] <=> y[:id]) }
+  @memos[@memos.size] = { id: (latest_memo[:id].to_i + 1).to_s, title: @title, content: @content }
   save_memos(FILE_PATH)
   redirect '/memos'
 end
