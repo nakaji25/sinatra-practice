@@ -67,7 +67,10 @@ end
 
 delete '/memos/:id' do
   @memos = open_memos(FILE_PATH)
-  @memos.delete(@memos[params[:id].to_i])
+  @memos.each_with_index do |memo, i|
+    @memos.delete_at(i) if memo[:id] == params[:id]
+  end
+
   save_memos(FILE_PATH)
   redirect '/memos'
 end
