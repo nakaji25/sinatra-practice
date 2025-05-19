@@ -20,19 +20,17 @@ def save_memos(file_path)
   File.open(file_path, 'w') { |file| JSON.dump(@memos, file) }
 end
 
-before do
-  @memos = open_memos(FILE_PATH)
-end
-
 get '/' do
   redirect '/memos'
 end
 
 get '/memos' do
+  @memos = open_memos(FILE_PATH)
   erb :memos
 end
 
 get '/memos/:id' do
+  @memos = open_memos(FILE_PATH)
   @memos.each do |memo|
     @memo = memo if memo[:id] == params[:id]
   end
@@ -44,6 +42,7 @@ get '/new-memos' do
 end
 
 get '/memos/:id/edit' do
+  @memos = open_memos(FILE_PATH)
   @memos.each do |memo|
     @memo = memo if memo[:id] == params[:id]
   end
@@ -51,10 +50,16 @@ get '/memos/:id/edit' do
 end
 
 post '/memos' do
+  @memos = open_memos(FILE_PATH)
   @title = params[:title]
   @content = params[:content]
-  latest_memo = @memos.max { |x, y| (x[:id] <=> y[:id]) }
-  @memos[@memos.size] = { id: (latest_memo[:id].to_i + 1).to_s, title: @title, content: @content }
+  add_id = 0
+  unless @memos.nil?
+    p @memos
+    latest_memo = @memos.max_by { |x| x[:id].to_i }
+    add_id = latest_memo[:id].to_i + 1
+  end
+  @memos[@memos.size] = { id: add_id.to_s, title: @title, content: @content }
   save_memos(FILE_PATH)
   redirect '/memos'
 end
