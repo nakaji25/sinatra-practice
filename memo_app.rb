@@ -54,8 +54,7 @@ post '/memos' do
   @title = params[:title]
   @content = params[:content]
   add_id = 0
-  unless @memos.nil?
-    p @memos
+  unless @memos.empty?
     latest_memo = @memos.max_by { |x| x[:id].to_i }
     add_id = latest_memo[:id].to_i + 1
   end
