@@ -14,6 +14,8 @@ $ git clone https://github.com/nakaji25/sinatra-practice.git
 
 Gemfile を作成し、以下を記載してください。
 
+`erb_lint`と`rubocop-fjord`に関しては、開発の時のコード整形にのみ利用するため、`group :development`とします。その上で、自動読み込みを行わないように`require: false`としてください。
+
 ```
 group :development do
     gem 'erb_lint', require: false
