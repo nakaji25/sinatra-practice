@@ -1,7 +1,7 @@
 <h2>
-  <%= h(@memo[:title]) %>
+  <%= h(@memo["title"]) %>
 </h2>
-<p class="content"><%= h(@memo[:content]) %></p>
+<p class="content"><%= h(@memo["content"]) %></p>
 <div class="f-container">
   <button type="button" class="back btn" onclick="location.href='/memos'">戻る</button>
   <button type="button" class="edit btn" onclick="location.href='/memos/<%= h(params[:id]) %>/edit'">編集</button>
