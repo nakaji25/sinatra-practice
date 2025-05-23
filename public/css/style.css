@@ -1,0 +1,43 @@
+.container {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+.f-container {
+  display: flex;
+}
+.i-container {
+  display: inline-block;
+}
+.between {
+  justify-content: space-between;
+}
+.btn {
+  width: 100px;
+  height: 60px;
+  font-size: 24px;
+  margin-top: 30px;
+  margin-left: 30px;
+}
+.left {
+  float: left;
+}
+h1 {
+  font-size: 45px;
+}
+h2,
+.title {
+  font-size: 32px;
+  margin-bottom: 5%;
+}
+.content {
+  font-size: 24px;
+}
+input {
+  width: 80%;
+}
+input.content {
+  height: 30%;
+}
+label {
+  font-size: 30;
+}
