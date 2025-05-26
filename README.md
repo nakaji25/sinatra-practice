@@ -74,13 +74,9 @@ sinatra_db=#
 
 Gemfile を作成し、以下を記載してください。
 
-`erb_lint`と`rubocop-fjord`に関しては、開発の時のコード整形にのみ利用するため、`group :development`とします。その上で、自動読み込みを行わないように`require: false`としてください。
-
 ```
-group :development do
-    gem 'erb_lint', require: false
-    gem 'rubocop-fjord', require: false
-do
+gem 'erb_lint'
+gem 'rubocop-fjord'
 gem 'sinatra'
 gem 'rackup'
 gem 'puma'
@@ -88,6 +84,8 @@ gem 'sinatra-contrib'
 gem 'webrick'
 gem 'pg'
 ```
+
+undler の機能をつかって、まとめて読み込みを行う場合は、`erb_lint`と`rubocop-fjord`を group 指定や`require: false`を追記してください。
 
 その後、以下のコマンドで Bundler を使ってインストールしてください。
 
