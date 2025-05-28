@@ -3,6 +3,7 @@
 require 'sinatra'
 require 'sinatra/reloader'
 require 'json'
+require 'pg'
 
 FILE_PATH = 'memos/memo.json'
 
@@ -12,12 +13,35 @@ helpers do
   end
 end
 
-def open_memos(file_path)
-  JSON.parse(File.open(file_path).read, symbolize_names: true)
+configure do
+  set :db_connection, nil
+  settings.db_connection = PG.connect(dbname: 'sinatra_db')
+  result = settings.db_connection.exec("SELECT * FROM information_schema.tables WHERE table_name = 'memos'")
+  if result.values.empty?
+    connect_db.exec('CREATE TABLE memos (id SERIAL PRIMARY KEY, title VARCHAR(255), content TEXT)')
+  end
 end
 
-def save_memos(file_path, memos)
-  File.open(file_path, 'w') { |file| JSON.dump(memos, file) }
+after do
+  settings.db_connection.finish if settings.db_connection && !settings.db_connection.finished?
+  settings.db_connection = nil
+end
+
+def connect_db
+  if settings.db_connection && !settings.db_connection.finished?
+    settings.db_connection
+  else
+    settings.db_connection = PG.connect(dbname: 'sinatra_db')
+  end
+end
+
+def open_memos
+  connect_db.exec('SELECT * FROM memos')
+end
+
+def search_memo(id)
+  result = connect_db.exec_params('SELECT * FROM memos WHERE id = $1;', [id])
+  result.to_a[0]
 end
 
 get '/' do
@@ -25,15 +49,12 @@ get '/' do
 end
 
 get '/memos' do
-  @memos = open_memos(FILE_PATH)
+  @memos = open_memos
   erb :memos
 end
 
 get '/memos/:id' do
-  memos = open_memos(FILE_PATH)
-  memos.each do |memo|
-    @memo = memo if memo[:id] == params[:id]
-  end
+  @memo = search_memo(params[:id])
   erb :content
 end
 
@@ -42,41 +63,22 @@ get '/new-memos' do
 end
 
 get '/memos/:id/edit' do
-  memos = open_memos(FILE_PATH)
-  memos.each do |memo|
-    @memo = memo if memo[:id] == params[:id]
-  end
+  @memo = search_memo(params[:id])
   erb :edit
 end
 
 post '/memos' do
-  memos = open_memos(FILE_PATH)
-  title = params[:title]
-  content = params[:content]
-  add_id = 0
-  unless memos.empty?
-    latest_memo = memos.max_by { |x| x[:id].to_i }
-    add_id = latest_memo[:id].to_i + 1
-  end
-  memos[memos.size] = { id: add_id.to_s, title: title, content: content }
-  save_memos(FILE_PATH, memos)
+  connect_db.exec_params('INSERT INTO memos(title, content) VALUES ($1, $2);', [params[:title], params[:content]])
   redirect '/memos'
 end
 
 patch '/memos/:id' do
-  memos = open_memos(FILE_PATH)
-  memos[params[:id].to_i][:title] = params[:title]
-  memos[params[:id].to_i][:content] = params[:content]
-  save_memos(FILE_PATH, memos)
+  connect_db.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3;',
+                         [params[:title], params[:content], params[:id]])
   redirect "/memos/#{params[:id]}"
 end
 
 delete '/memos/:id' do
-  memos = open_memos(FILE_PATH)
-  memos.each_with_index do |memo, i|
-    memos.delete_at(i) if memo[:id] == params[:id]
-  end
-
-  save_memos(FILE_PATH, memos)
+  connect_db.exec_params('DELETE FROM memos WHERE id = $1;', [params[:id]])
   redirect '/memos'
 end
