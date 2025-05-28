@@ -13,14 +13,25 @@ helpers do
   end
 end
 
-def connect_db
-  PG.connect(dbname: 'sinatra_db')
-end
-
 configure do
-  result = connect_db.exec("SELECT * FROM information_schema.tables WHERE table_name = 'memos'")
+  set :db_connection, nil
+  settings.db_connection = PG.connect(dbname: 'sinatra_db')
+  result = settings.db_connection.exec("SELECT * FROM information_schema.tables WHERE table_name = 'memos'")
   if result.values.empty?
     connect_db.exec('CREATE TABLE memos (id SERIAL PRIMARY KEY, title VARCHAR(255), content TEXT)')
+  end
+end
+
+after do
+  settings.db_connection.finish if settings.db_connection && !settings.db_connection.finished?
+  settings.db_connection = nil
+end
+
+def connect_db
+  if settings.db_connection && !settings.db_connection.finished?
+    settings.db_connection
+  else
+    settings.db_connection = PG.connect(dbname: 'sinatra_db')
   end
 end
 

@@ -85,7 +85,7 @@ gem 'webrick'
 gem 'pg'
 ```
 
-undler の機能をつかって、まとめて読み込みを行う場合は、`erb_lint`と`rubocop-fjord`を group 指定や`require: false`を追記してください。
+Bundler の機能をつかって、まとめて読み込みを行う場合は、`erb_lint`と`rubocop-fjord`を group 指定や`require: false`を追記してください。
 
 その後、以下のコマンドで Bundler を使ってインストールしてください。
 
